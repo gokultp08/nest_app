@@ -1,22 +1,36 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Scope } from '@nestjs/common';
 import { resolve } from 'path';
-import { IUser } from 'src/dto/user-dto';
+import { User } from 'src/dto/user-dto';
+import { UserSchema } from './user.schema';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
-@Injectable()
+// @Injectable()
+@Injectable({ scope: Scope.REQUEST })
 export class UserService {
-  addUser(user: IUser): Promise<IUser> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(user);
-      }, 3000);
-    });
+  private valuee = 0;
+
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
+
+  addUser(user: User): Promise<User> {
+   const newUser = await this.userModel.create(user);
+   return newCustomer;
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve(user);
+    //   }, 3000);
+    // });
   }
 
   getUser(id: String): Promise<string> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve(process.env.JWT_SECRET);
-      }, 3000);
+        resolve(this.valuee.toString());
+        this.valuee = this.valuee + 1;
+        // resolve(process.env.JWT_SECRET);
+      }, 0);
     });
   }
 }
