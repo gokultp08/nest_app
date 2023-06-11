@@ -5,7 +5,7 @@ import { LoggerMiddleware } from './utils/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/filter/http-exception.filter';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User } from './dto/user-dto';
+import { UserDto } from './dto/user-dto';
 import { UserSchema } from './user/user.schema';
 
 @Module({
@@ -15,14 +15,13 @@ import { UserSchema } from './user/user.schema';
     }),
     UserModule,
     MongooseModule.forRoot(process.env.MONGO_URL),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   controllers: [],
   providers: [
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
+    // {
+    //   provide: APP_FILTER,
+    //   useClass: HttpExceptionFilter,
+    // },
     // {
     //   provide: ConfigService,
     //   useClass:
