@@ -7,6 +7,7 @@ import { HttpExceptionFilter } from './utils/filter/http-exception.filter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserDto } from './user/dto/user-dto';
 import { UserSchema } from './user/user.schema';
+import { ChatModule } from './message/chat.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { UserSchema } from './user/user.schema';
     }),
     MongooseModule.forRoot(process.env.MONGO_URL),
     UserModule,
+    ChatModule,
   ],
   controllers: [],
   providers: [
