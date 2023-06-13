@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, Scope } from '@nestjs/common';
 import { resolve } from 'path';
-import { UserDto } from 'src/dto/user-dto';
-import { UserSchema } from './user.schema';
+import { User, UserSchema } from './user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { UserDto } from './dto/user-dto';
 
 // @Injectable()
 @Injectable({ scope: Scope.REQUEST })
@@ -11,7 +11,7 @@ export class UserService {
   private valuee = 0;
 
   constructor(
-    @InjectModel(UserDto.name) private readonly userModel: Model<UserDto>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async add(user: UserDto): Promise<UserDto> {

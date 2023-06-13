@@ -12,11 +12,11 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { UserDto } from 'src/dto/user-dto';
-import { UserService } from 'src/user/user.service';
 import { HttpExceptionFilter } from 'src/utils/filter/http-exception.filter';
 import { RolesGuard } from 'src/utils/guards/role.guard';
 import { LoggingInterceptor } from 'src/utils/interceptor/logging.interceptor';
+import { UserDto } from './dto/user-dto';
+import { UserService } from './user.service';
 
 const API = 'v1/user';
 export const Roles = (...roles: string[]) => SetMetadata('roles', roles);

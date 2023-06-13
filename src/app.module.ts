@@ -5,7 +5,7 @@ import { LoggerMiddleware } from './utils/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/filter/http-exception.filter';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserDto } from './dto/user-dto';
+import { UserDto } from './user/dto/user-dto';
 import { UserSchema } from './user/user.schema';
 
 @Module({
@@ -13,8 +13,8 @@ import { UserSchema } from './user/user.schema';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UserModule,
     MongooseModule.forRoot(process.env.MONGO_URL),
+    UserModule,
   ],
   controllers: [],
   providers: [
