@@ -5,9 +5,7 @@ import { LoggerMiddleware } from './utils/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/filter/http-exception.filter';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UserDto } from './user/dto/user-dto';
-import { UserSchema } from './user/user.schema';
-import { ChatModule } from './message/chat.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -36,6 +34,7 @@ import { ChatModule } from './message/chat.module';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleware).forRoutes('v1/user');
+    consumer.apply(LoggerMiddleware).forRoutes('v1/chat');
     // .forRoutes({ path: 'cats', method: RequestMethod.GET });
     // forRoutes({ path: 'ab*cd', method: RequestMethod.ALL });
     //  .forRoutes(CatsController);

@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Headers,
   Param,
   Post,
   Put,
@@ -16,44 +17,35 @@ import {
 import { RolesGuard } from 'src/utils/guards/role.guard';
 import { LoggingInterceptor } from 'src/utils/interceptor/logging.interceptor';
 import { ChatService } from './chat.service';
-import { MessageDto } from './dto/chat.dto';
+import { ChatDto } from './dto/chat.dto';
 
-const API = 'v1/message';
-export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
+const API = 'v1/chat';
 
 @Controller()
 @UseGuards(RolesGuard)
-@Roles('admin')
 @UseInterceptors(LoggingInterceptor)
 // @UseFilters(new HttpExceptionFilter())
 export class ChatController {
-  constructor(private readonly messageService: ChatService) {}
+  constructor(private readonly chatService: ChatService) {}
 
   @Post(`${API}`)
-  async createMessage(@Body() user: MessageDto) {
+  async createMessage(@Body() user: ChatDto) {
     console.log('received', user);
     try {
-      const result = await this.messageService.add(user);
+      const result = await this.chatService.add(user);
       return result;
     } catch (err) {
       throw err;
     }
   }
 
-  @Get(`${API}`)
-  async getAllMessages(): Promise<any> {
+  @Get(`${API}/:sender/:receiver`)
+  async getAllMessages(
+    @Param('sender') sender: string,
+    @Param('receiver') receiver: string,
+  ): Promise<any> {
     try {
-      const result = await this.messageService.findAll();
-      return result;
-    } catch (err) {
-      throw err;
-    }
-  }
-
-  @Get(`${API}/:id`)
-  async getMessage(@Param('id') id: string): Promise<any> {
-    try {
-      const result = await this.messageService.find(id);
+      const result = await this.chatService.findAll(sender, receiver);
       return result;
     } catch (err) {
       throw err;
@@ -62,11 +54,12 @@ export class ChatController {
 
   @Put(`${API}/:id`)
   async updateMessage(
+    @Headers('userId') userId: string,
     @Param('id') id: string,
-    @Body() user: MessageDto,
+    @Body() user: null | undefined,
   ): Promise<any> {
     try {
-      const result = await this.messageService.update(id, user);
+      const result = await this.chatService.markAsSeen(id, userId);
       return result;
     } catch (err) {
       throw err;
@@ -74,9 +67,12 @@ export class ChatController {
   }
 
   @Delete(`${API}/:id`)
-  async deleteMessage(@Param('id') id: string): Promise<boolean> {
+  async deleteMessage(
+    @Param('id') id: string,
+    @Headers('userId') userId: string,
+  ): Promise<boolean> {
     try {
-      const result = await this.messageService.delete(id);
+      const result = await this.chatService.delete(id, userId);
       return result;
     } catch (err) {
       throw err;

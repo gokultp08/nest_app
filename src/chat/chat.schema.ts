@@ -20,13 +20,3 @@ export class Chat extends Document {
 }
 
 export const ChatSchema = SchemaFactory.createForClass(Chat);
-// UserSchema.methods.mapToDto = function (password: string): UserDto {
-//   return {
-//     userId: this._id,
-//     name: this.name,
-//     email: this.email,
-//     password: this.password,
-//     image: this.image,
-//     bio: this.bio,
-//   };
-// };
