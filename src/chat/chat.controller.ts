@@ -56,7 +56,6 @@ export class ChatController {
   async updateMessage(
     @Headers('userId') userId: string,
     @Param('id') id: string,
-    @Body() user: null | undefined,
   ): Promise<any> {
     try {
       const result = await this.chatService.markAsSeen(id, userId);
