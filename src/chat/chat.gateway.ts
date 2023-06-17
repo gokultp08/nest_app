@@ -10,7 +10,7 @@ import { Server, Socket } from 'socket.io';
 import { IChatNotification } from 'src/utils/interfaces/interfaces';
 
 @WebSocketGateway({
-  port: 4000,
+  port: process.env.SOCKET,
 })
 export class ChatGateway
   implements OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect
