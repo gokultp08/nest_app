@@ -5,22 +5,32 @@ import {
   Scope,
   UnauthorizedException,
 } from '@nestjs/common';
-import { resolve } from 'path';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Chat } from './chat.schema';
 import { ChatDto } from './dto/chat.dto';
+import { ChatGateway } from './chat.gateway';
+import { ChatEvents } from 'src/utils/enums/enum';
 
 // @Injectable()
 @Injectable({ scope: Scope.REQUEST })
 export class ChatService {
   constructor(
     @InjectModel(Chat.name) private readonly messageModel: Model<Chat>,
+    private chatGateway: ChatGateway,
   ) {}
 
   async add(user: ChatDto): Promise<ChatDto> {
     console.log('create');
     const newChat = await this.messageModel.create(user);
+    this.chatGateway.emitChangeToClients(
+      {
+        chat: newChat,
+        chatId: newChat._id,
+        type: ChatEvents.CHAT_ADDED,
+      },
+      [newChat.sender, newChat.receiver],
+    );
     console.log('after create', newChat);
     return newChat;
   }
