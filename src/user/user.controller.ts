@@ -29,6 +29,17 @@ export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Post('login')
+  async login(@Body() user: { username: string; password: string }) {
+    console.log('received', user);
+    try {
+      const result = await this.userService.login(user);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
   @Post(`${API}`)
   async addUser(@Body() user: UserDto) {
     console.log('received', user);

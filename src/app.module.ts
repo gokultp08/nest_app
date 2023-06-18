@@ -6,6 +6,7 @@ import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './utils/filter/http-exception.filter';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ChatModule } from './chat/chat.module';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -15,6 +16,11 @@ import { ChatModule } from './chat/chat.module';
     MongooseModule.forRoot(process.env.MONGO_URL),
     UserModule,
     ChatModule,
+    JwtModule.register({
+      global: true,
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '10000s' },
+    }),
   ],
   controllers: [],
   providers: [

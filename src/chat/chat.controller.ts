@@ -18,11 +18,12 @@ import { RolesGuard } from 'src/utils/guards/role.guard';
 import { LoggingInterceptor } from 'src/utils/interceptor/logging.interceptor';
 import { ChatService } from './chat.service';
 import { ChatDto } from './dto/chat.dto';
+import { JWTGuard } from './guards/jwt.guard';
 
 const API = 'v1/chat';
 
 @Controller()
-@UseGuards(RolesGuard)
+@UseGuards(JWTGuard)
 @UseInterceptors(LoggingInterceptor)
 // @UseFilters(new HttpExceptionFilter())
 export class ChatController {
