@@ -23,13 +23,12 @@ export class ChatService {
   async add(user: ChatDto): Promise<ChatDto> {
     console.log('create');
     const newChat = await this.messageModel.create(user);
-    this.chatGateway.emitChangeToClients(
-      {
-        chat: newChat,
-        chatId: newChat._id,
-        type: ChatEvents.CHAT_ADDED,
-      },
-      [newChat.sender, newChat.receiver],
+    this.emitNotification(
+      newChat,
+      newChat._id,
+      ChatEvents.CHAT_ADDED,
+      [newChat.sender],
+      [newChat.receiver],
     );
     console.log('after create', newChat);
     return newChat;
@@ -64,6 +63,13 @@ export class ChatService {
       { _id: id },
       oldChat,
     );
+    this.emitNotification(
+      newChat,
+      newChat._id,
+      ChatEvents.CHAT_SEEN,
+      [newChat.sender],
+      [newChat.receiver],
+    );
 
     return newChat;
   }
@@ -78,7 +84,30 @@ export class ChatService {
     if (!newChat) {
       throw new NotFoundException(`UCannot delete the chat`);
     }
+    this.emitNotification(
+      newChat,
+      newChat._id,
+      ChatEvents.CHAT_DELETE,
+      [newChat.sender],
+      [newChat.receiver],
+    );
 
     return true;
+  }
+  private emitNotification(
+    chat: ChatDto,
+    chatId: string,
+    type: ChatEvents,
+    senders: string[],
+    receivers: string[],
+  ): void {
+    this.chatGateway.emitChangeToClients(
+      {
+        chat,
+        chatId,
+        type,
+      },
+      [...senders, ...receivers],
+    );
   }
 }
