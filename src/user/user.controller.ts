@@ -29,11 +29,22 @@ export const Roles = (...roles: string[]) => SetMetadata('roles', roles);
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post('login')
+  @Post('v1/login')
   async login(@Body() user: { username: string; password: string }) {
     console.log('received', user);
     try {
       const result = await this.userService.login(user);
+      return result;
+    } catch (err) {
+      throw err;
+    }
+  }
+
+  @Post('v1/verify')
+  async verify(@Body() data: { userId: string; token: string }) {
+    console.log('received verify');
+    try {
+      const result = await this.userService.verify(data);
       return result;
     } catch (err) {
       throw err;

@@ -37,6 +37,24 @@ export class UserService {
     };
   }
 
+  async verify(data: { userId: string; token: string }): Promise<any> {
+    const result = await this.jwtService.verifyAsync(data.token);
+    if (data.userId !== result['id']) {
+      throw new InvalidRequestException();
+    }
+
+    const userDetails = await this.userModel.findById(data.userId).exec();
+    if (userDetails === null) {
+      throw new InvalidRequestException();
+    }
+    const payload = { id: userDetails._id, username: userDetails.email };
+    const token = await this.jwtService.signAsync(payload);
+    return {
+      user: userDetails,
+      token,
+    };
+  }
+
   async add(user: UserDto): Promise<UserDto> {
     console.log('create');
     user.password = await this.hashPassword(user.password);
